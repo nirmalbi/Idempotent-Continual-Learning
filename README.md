@@ -13,7 +13,7 @@ Official Repository for ICLR'26 Paper"Idempotent Experience Replay for Reliable 
 ## Table of Content
 
 * [1. Tutorial](#1-Tutorial)
-* [2. Reproduced Results](#2-Reproduced Results)
+* [2. Reproduced Results](#2-reproduced-results)
 * [3. Citation](#3-citation)
 * [4. Acknowledgement](#4-acknowledgement)
 
