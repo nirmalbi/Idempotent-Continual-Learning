@@ -62,7 +62,7 @@ def make_ddp(model):
 
 class CustomDP(DataParallel):
 
-    intercept_names = ['classifier', 'num_classes', 'set_return_prerelu']
+    intercept_names = ['classifier', 'num_classes', 'set_return_prerelu','']
 
     def __getattr__(self, name: str):
         if name in self.intercept_names:

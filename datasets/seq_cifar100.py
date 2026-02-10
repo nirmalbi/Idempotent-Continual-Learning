@@ -9,14 +9,15 @@ import torch.nn.functional as F
 import torch.optim
 import torchvision.transforms as transforms
 from backbone.ResNet18 import resnet18
-from backbone.ResNet18_id import resnet18_id
 from backbone.ResNet18_id2 import resnet18_id2
 from PIL import Image
 from torchvision.datasets import CIFAR100
 import torch.nn as nn
 from datasets.transforms.denormalization import DeNormalize
 from datasets.utils.continual_dataset import (ContinualDataset,
-                                              store_masked_loaders)
+                                              store_masked_loaders,
+                                              get_first_train_loader,
+                                              get_first_test_loader)
 from datasets.utils.validation import get_train_val
 from utils.conf import base_path_dataset as base_path
 from torchvision.models import mobilenet_v2
@@ -102,10 +103,12 @@ class SequentialCIFAR100(ContinualDataset):
             test_dataset = TCIFAR100(base_path() + 'CIFAR100', train=False,
                                      download=True, transform=test_transform)
 
-        self.permute_tasks(train_dataset, test_dataset)
+        #self.permute_tasks(train_dataset, test_dataset)
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
 
         return train, test
+
+    
 
     @staticmethod
     def get_transform():
@@ -116,13 +119,10 @@ class SequentialCIFAR100(ContinualDataset):
     def get_backbone(self):
         return resnet18(SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS, nf=int(64*self.args.resnet_width))
         # model = mobilenet_v2(num_classes=SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS)
-        # return model
-
-    def get_backbone2(self):
-        return resnet18_id(SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS, nf=int(64*self.args.resnet_width))
-    
+        # return model  
     def get_backbone3(self):
-        return resnet18_id2(SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS, nf=int(64*self.args.resnet_width))
+        return resnet18_id2(SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS, nf=int(64*self.args.resnet_width),use_cos=self.args.use_cos)
+    @staticmethod
     @staticmethod
     def get_loss():
         return F.cross_entropy
@@ -152,9 +152,17 @@ class SequentialCIFAR100(ContinualDataset):
     @staticmethod
     def get_minibatch_size():
         return SequentialCIFAR100.get_batch_size()
-
+    """
+    @staticmethod
+    def get_scheduler(model, args) -> torch.optim.lr_scheduler:
+        
+        return None
+    """
     @staticmethod
     def get_scheduler(model, args) -> torch.optim.lr_scheduler:
         model.opt = torch.optim.SGD(model.net.parameters(), lr=args.lr, weight_decay=args.optim_wd, momentum=args.optim_mom)
         scheduler = torch.optim.lr_scheduler.MultiStepLR(model.opt, [35, 45], gamma=0.1, verbose=False)
+        #model.opt = torch.optim.SGD(model.net.parameters(), lr=args.lr,
+        #             momentum=0.9, weight_decay=5e-4)
+        #scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(model.opt, T_max=50)
         return scheduler

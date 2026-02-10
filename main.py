@@ -24,6 +24,7 @@ from utils.conf import set_random_seed
 from utils.continual_training import train as ctrain
 from utils.distributed import make_dp
 from utils.training import train
+from utils.args import *
 
 mammoth_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(mammoth_path)
@@ -54,27 +55,37 @@ def parse_known_args():
     parser.add_argument('--load_best_args', action='store_true',
                         help='Loads the best arguments for each method, '
                              'dataset and memory buffer.')
+    
     # torch.set_num_threads(4)
     add_management_args(parser)
     args = parser.parse_known_args()[0]
-
     return parser, args
 
 
 def parse_model_args(parser, args):
     mod = importlib.import_module('models.' + args.model)
-    
-
+    #parser.add_argument('--weightmask', type=float, help='Penalty weight for mask ratio.')
+    parser.add_argument('--online', action='store_true', help='online continual learning.')
+    parser.add_argument("--use_cos", type=str2bool, default=False,
+                        help="If set, use cosine classifer")
+    parser.add_argument("--savecheckpoint", type=str2bool, default=False,
+                        help="If set, save checkpoint after training")
+ 
     if args.load_best_args:
+        
         parser.add_argument('--dataset', type=str, required=True,
                             choices=DATASET_NAMES,
                             help='Which dataset to perform experiments on.')
         parser.add_argument('--half_data_in_first_task', action='store_true', help='use half of data for first expirience')
         parser.add_argument('--device', type=str, default='cuda:0')
+        
+
+        
         if hasattr(mod, 'Buffer'):
             parser.add_argument('--buffer_size', type=int, required=True,
                                 help='The size of the memory buffer.')
-        args = parser.parse_args()
+        #args = parser.parse_args()
+        args = parser.parse_known_args()[0]
         if args.model == 'joint':
             best = best_args[args.dataset]['sgd']
         else:
@@ -85,16 +96,24 @@ def parse_model_args(parser, args):
             best = best[-1]
         get_parser = getattr(mod, 'get_parser')
         parser = get_parser()
+        parser.add_argument('--online', action='store_true', help='online continual learning.')
+        parser.add_argument("--use_cos", type=str2bool, default=False,
+                        help="If set, use cosine classifer")
+        parser.add_argument("--savecheckpoint", type=str2bool, default=False,
+                        help="If set, save checkpoint after training")
         to_parse = sys.argv[1:] + ['--' + k + '=' + str(v) for k, v in best.items()]
         to_parse.remove('--load_best_args')
         args = parser.parse_args(to_parse)
         if args.model == 'joint' and args.dataset == 'mnist-360':
             args.model = 'joint_gcl'
+        
     else:
+
         get_parser = getattr(mod, 'get_parser')
         parser = get_parser()
         args = parser.parse_args()
-
+        
+    
     return args
 
 
@@ -104,6 +123,7 @@ def run_experiment(args):
 
     os.putenv("MKL_SERVICE_FORCE_INTEL", "1")
     os.putenv("NPY_MKL_FORCE_INTEL", "1")
+    
 
     # Add uuid, timestamp and hostname for logging
     args.conf_jobnum = str(uuid.uuid4())
@@ -115,13 +135,14 @@ def run_experiment(args):
     print(args.model)
     if args.n_epochs is None and isinstance(dataset, ContinualDataset):
         args.n_epochs = dataset.get_epochs()
+    print(args.n_epochs)
     if args.batch_size is None:
         args.batch_size = dataset.get_batch_size()
     if hasattr(importlib.import_module('models.' + args.model), 'Buffer') and args.minibatch_size is None:
         args.minibatch_size = dataset.get_minibatch_size()
-    if args.model=="derid" or args.model=='derppid' or args.model=='erid' or args.model=='derloss':
-        backbone = dataset.get_backbone2()
-        print("use changed model")
+    if args.model=="idempotent2":  
+        backbone = dataset.get_backbone3()
+        print("use changed model middle")
     else:
         backbone = dataset.get_backbone()
     print(f'backbone number of parameters = {get_n_parameters(backbone)}')
@@ -140,7 +161,8 @@ def run_experiment(args):
 
     # set job name
     setproctitle.setproctitle('{}_{}_{}'.format(args.model, args.buffer_size if 'buffer_size' in args else 0, args.dataset))
-
+    if args.online == True:
+        args.n_epochs = 1
     # args.n_epochs = 1
     if isinstance(dataset, ContinualDataset):
         train(model, dataset, args)

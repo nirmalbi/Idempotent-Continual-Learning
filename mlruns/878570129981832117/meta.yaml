@@ -1,0 +1,6 @@
+artifact_location: /data/zhanwang/IDCL/mlruns/1
+creation_time: 1770392836396
+experiment_id: '878570129981832117'
+last_update_time: 1770392836396
+lifecycle_stage: active
+name: idempotent/cifar10/buffer200

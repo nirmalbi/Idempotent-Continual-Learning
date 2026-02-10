@@ -1,0 +1,6 @@
+artifact_location: /data/zhanwang/IDCL/mlruns/1
+creation_time: 1770389489830
+experiment_id: '893594624959515675'
+last_update_time: 1770389489830
+lifecycle_stage: active
+name: idempotent/tinyimg/buffer4000

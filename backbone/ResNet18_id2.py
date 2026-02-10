@@ -12,7 +12,35 @@ from torch.nn.functional import avg_pool2d, relu
 
 from backbone import MammothBackbone
 
+class Classifier(torch.nn.Module):
+    def __init__(self,
+                 feat_dim,
+                 nb_cls,
+                 cos_temp):
+        super(Classifier, self).__init__()
 
+        fc = torch.nn.Linear(feat_dim, nb_cls)        
+        self.weight = torch.nn.Parameter(fc.weight.t(), requires_grad=True)
+        self.bias = torch.nn.Parameter(fc.bias, requires_grad=True)
+        self.cos_temp = torch.nn.Parameter(torch.FloatTensor(1).fill_(cos_temp), requires_grad=False)
+        self.apply = self.apply_cosine
+    def get_weight(self):
+        return self.weight, self.bias
+
+    def apply_cosine(self, feature, weight, bias):
+        
+        feature = F.normalize(feature, p=2, dim=1, eps=1e-12) ## Attention: normalized along 2nd dimension!!!
+        weight = F.normalize(weight, p=2, dim=0, eps=1e-12)## Attention: normalized along 1st dimension!!!
+
+        cls_score = self.cos_temp * (torch.mm(feature, weight))
+        return cls_score
+
+
+    def forward(self, feature):
+        weight, bias = self.get_weight()
+        cls_score = self.apply(feature, weight, bias)
+
+        return cls_score
 def conv3x3(in_planes: int, out_planes: int, stride: int=1) -> F.conv2d:
     """
     Instantiates a 3x3 convolutional layer with no bias.
@@ -131,7 +159,7 @@ class ResNet2(MammothBackbone):
     """
 
     def __init__(self, block: BasicBlock, num_blocks: List[int],
-                 num_classes: int, nf: int) -> None:
+                 num_classes: int, nf: int,use_cos=False) -> None:
         """
         Instantiates the layers of the network.
         :param block: the basic ResNet block
@@ -149,14 +177,18 @@ class ResNet2(MammothBackbone):
         self.layer2 = self._make_layer(block, nf * 2, num_blocks[1], stride=2)
         self.layer3 = self._make_layer(block, nf * 4, num_blocks[2], stride=2)
         self.layer4 = self._make_layer(block, nf * 8, num_blocks[3], stride=2)
-        self.linear = nn.Linear(nf * 8 * block.expansion, num_classes+128)
+        self.linear = nn.Linear(nf * 8 * block.expansion, num_classes)
         self.net_channels = [nf * 1, nf * 2, nf * 4, nf * 8]
         self.y_hat_fc = nn.Sequential(
             nn.Linear(num_classes, 128),
             nn.LeakyReLU()
         )
-  
-        self.classifier = self.linear
+        if  use_cos:
+            self.classifier = Classifier(512*block.expansion, num_classes, 12)
+            print("use cos!")
+        else:
+            self.classifier = self.linear
+    
 
     def _make_layer(self, block: BasicBlock, planes: int,
                     num_blocks: int, stride: int) -> nn.Module:
@@ -192,10 +224,13 @@ class ResNet2(MammothBackbone):
         feature = out.view(out.size(0), -1)  # 512
 
         out = self.classifier(feature)
-        if returnt2=='out':
-            return out[:, :self.num_classes], out[:, self.num_classes:]
-        if  returnt2 == 'features':
-            return feat
+        if returnt2=="tsne":
+            return feature
+        else:
+            return out[:, :self.num_classes], feat
+        
+
+
 
  
 
@@ -206,7 +241,7 @@ class ResNet(MammothBackbone):
     """
 
     def __init__(self, block: BasicBlock, num_blocks: List[int],
-                 num_classes: int, nf: int) -> None:
+                 num_classes: int, nf: int,use_cos=False) -> None:
         """
         Instantiates the layers of the network.
         :param block: the basic ResNet block
@@ -216,14 +251,14 @@ class ResNet(MammothBackbone):
         """
         super(ResNet, self).__init__()
         self.f1 = ResNet1(BasicBlock, [2, 2, 2, 2], num_classes, nf)
-        self.f2 = ResNet2(BasicBlock, [2, 2, 2, 2], num_classes, nf)
+        self.f2 = ResNet2(BasicBlock, [2, 2, 2, 2], num_classes, nf,use_cos)
         self.in_planes = nf
         self.block = block
         self.num_classes = num_classes
         self.nf = nf
         self.final_d = nf * 8
         
-    def forward(self, x: torch.Tensor, y: torch.Tensor, returnt='out') -> torch.Tensor:
+    def forward(self, x: torch.Tensor, y: torch.Tensor, returnt='features') -> torch.Tensor:
         """
         Compute a forward pass.
         :param x: input tensor (batch_size, *input_shape)
@@ -235,12 +270,12 @@ class ResNet(MammothBackbone):
         if returnt=='out':
             y_pred, z_pred  = self.f2(z, y,returnt2=returnt)
             return y_pred, z_pred
-        if  returnt == 'features':
+        if  returnt == 'tsne':
             feature  = self.f2(z, y,returnt2=returnt)
             return feature
         
 
-def resnet18_id2(nclasses: int, nf: int=64) -> ResNet:
+def resnet18_id2(nclasses: int, nf: int=64,use_cos=False) -> ResNet:
     """
     Instantiates a ResNet18 network.
     :param nclasses: number of output classes
@@ -248,4 +283,4 @@ def resnet18_id2(nclasses: int, nf: int=64) -> ResNet:
     :return: ResNet network
     """
 
-    return ResNet(BasicBlock, [2, 2, 2, 2], nclasses, nf)
+    return ResNet(BasicBlock, [2, 2, 2, 2], nclasses, nf,use_cos)

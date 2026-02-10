@@ -16,6 +16,18 @@ def str2bool(v):
         return False
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
+def add_gcil_args(parser: ArgumentParser) -> None:
+    """
+    Adds the arguments required for GCIL-CIFAR100 Dataset.
+    :param parser: the parser instance
+    """
+    # arguments for GCIL-CIFAR100
+    parser.add_argument('--gil_seed', type=int, default=1993, help='Seed value for GIL-CIFAR task sampling')
+    parser.add_argument('--pretrain', action='store_true', default=False, help='whether to use pretrain')
+    parser.add_argument('--phase_class_upper', default=50, type=int, help='the maximum number of classes')
+    parser.add_argument('--epoch_size', default=1000, type=int, help='Number of samples in one epoch')
+    parser.add_argument('--pretrain_class_nb', default=0, type=int, help='the number of classes in first group')
+    parser.add_argument('--weight_dist', default='unif', type=str, help='what type of weight distribution assigned to classes to sample (unif or longtail)')
 def add_experiment_args(parser: ArgumentParser) -> None:
     """
     Adds the arguments used by all the models.

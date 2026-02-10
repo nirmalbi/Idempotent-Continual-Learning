@@ -165,3 +165,43 @@ def get_previous_train_loader(train_dataset: Dataset, batch_size: int,
     train_dataset.targets = np.array(train_dataset.targets)[train_mask]
 
     return DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+
+def get_first_train_loader(train_dataset: Dataset,
+                              setting: ContinualDataset) -> DataLoader:
+    """
+    Creates a dataloader for the previous task.
+    :param train_dataset: the entire training set
+    :param batch_size: the desired batch size
+    :param setting: the continual dataset at hand
+    :return: a dataloader
+    """
+    n_classes = setting.N_CLASSES_PER_TASK
+    train_mask = np.logical_and(np.array(train_dataset.targets) >= 0,
+                                np.array(train_dataset.targets) < 0 + n_classes)
+
+    train_dataset.data = train_dataset.data[train_mask]
+    train_dataset.targets = np.array(train_dataset.targets)[train_mask]
+    train_loader = DataLoader(train_dataset,
+                              batch_size=setting.args.batch_size, shuffle=True, num_workers=4)
+
+    return train_loader
+def get_first_test_loader(test_dataset: Dataset,
+                              setting: ContinualDataset) -> DataLoader:
+    """
+    Creates a dataloader for the previous task.
+    :param train_dataset: the entire training set
+    :param batch_size: the desired batch size
+    :param setting: the continual dataset at hand
+    :return: a dataloader
+    """
+    n_classes = setting.N_CLASSES_PER_TASK
+    
+    test_mask = np.logical_and(np.array(test_dataset.targets) >= setting.i,
+                               np.array(test_dataset.targets) < setting.i + n_classes)
+    test_dataset.data = test_dataset.data[test_mask]
+
+    test_loader = DataLoader(test_dataset,
+                             batch_size=setting.args.batch_size, shuffle=False, num_workers=4)
+  
+
+    return test_loader

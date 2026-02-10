@@ -1,0 +1,15 @@
+artifact_uri: /data/zhanwang/IDCL/mlruns/1/c343ae293e0d4c78b2290eafacaf0b26/artifacts
+end_time: 1770435081059
+entry_point_name: ''
+experiment_id: '207875139483898036'
+lifecycle_stage: active
+run_id: c343ae293e0d4c78b2290eafacaf0b26
+run_name: ' er+id 0.5 der 0.4 er 0.5 bfp 0 mask 1 bfp_distill 0 seed 2 10 tasks'
+run_uuid: c343ae293e0d4c78b2290eafacaf0b26
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1770426326105
+status: 3
+tags: []
+user_id: zhanwang

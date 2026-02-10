@@ -10,8 +10,7 @@ import torchvision.transforms as transforms
 from backbone.ResNet18 import resnet18
 from PIL import Image
 from torchvision.datasets import CIFAR10
-from backbone.ResNet18_id import resnet18_id
-
+from backbone.ResNet18_id2 import resnet18_id2
 from datasets.seq_tinyimagenet import base_path
 from datasets.transforms.denormalization import DeNormalize
 from datasets.utils.continual_dataset import (ContinualDataset,
@@ -94,7 +93,7 @@ class SequentialCIFAR10(ContinualDataset):
             test_dataset = TCIFAR10(base_path() + 'CIFAR10', train=False,
                                     download=True, transform=test_transform)
 
-        self.permute_tasks(train_dataset, test_dataset)
+        #self.permute_tasks(train_dataset, test_dataset)
         train, test = store_masked_loaders(train_dataset, test_dataset, self)
         return train, test
 
@@ -107,9 +106,9 @@ class SequentialCIFAR10(ContinualDataset):
     @staticmethod
     def get_backbone():
         return resnet18(SequentialCIFAR10.N_CLASSES_PER_TASK
-                        * SequentialCIFAR10.N_TASKS)
-    def get_backbone2(self):
-        return resnet18_id(SequentialCIFAR10.N_CLASSES_PER_TASK * SequentialCIFAR10.N_TASKS, nf=int(64*self.args.resnet_width))
+                       * SequentialCIFAR10.N_TASKS)
+    def get_backbone3(self):
+        return resnet18_id2(SequentialCIFAR10.N_CLASSES_PER_TASK * SequentialCIFAR10.N_TASKS, nf=int(64*self.args.resnet_width),use_cos=self.args.use_cos)
     @staticmethod
     def get_loss():
         return F.cross_entropy

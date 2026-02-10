@@ -8,7 +8,10 @@ import torch
 from models.utils.continual_model import ContinualModel
 from utils.args import add_management_args, add_experiment_args, add_rehearsal_args, ArgumentParser
 from utils.buffer import Buffer
-
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
 
 def get_parser() -> ArgumentParser:
     parser = ArgumentParser(description='Continual learning via'
@@ -26,6 +29,7 @@ class Er(ContinualModel):
     def __init__(self, backbone, loss, args, transform):
         super(Er, self).__init__(backbone, loss, args, transform)
         self.buffer = Buffer(self.args.buffer_size, self.device)
+        self.task=0
 
     def observe(self, inputs, labels, not_aug_inputs):
 
@@ -47,3 +51,7 @@ class Er(ContinualModel):
                              labels=labels[:real_batch_size])
 
         return loss.item()
+    def end_task(self, dataset):
+        print('\n\n')
+        self.task+=1
+        print(self.task)

@@ -92,7 +92,7 @@ class PermutedMNIST(ContinualDataset):
     @staticmethod
     def get_normalization_transform():
         return None
-
+    
     @staticmethod
     def get_denormalization_transform():
         return None
