@@ -44,6 +44,7 @@ mlflow ui
 And then go to http://127.0.0.1:5000/#/ in your brower to see all the results from the experiments we runned and exact hyperparameters used in each run.
 
 Checkpoint
+
 The checkpoints are saved under experiments folder.
 
 ## 3. Citation
