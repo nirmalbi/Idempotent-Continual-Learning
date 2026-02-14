@@ -12,17 +12,17 @@ IDER is a novel framework for continual learning based on the idempotent propert
 <hr/>
 
 <p>
-Lai Wei<sup>1,2,3</sup>, Liangbo He<sup>2</sup>, Jun Lan<sup>2</sup>, Lingzhong Dong<sup>1,2</sup>, Yutong Cai<sup>1</sup>, Siyuan Li<sup>2</sup>, Huijia Zhu<sup>2</sup>, Weiqiang Wang<sup>2</sup>, Linghe Kong<sup>1</sup>, Yue Wang<sup>3</sup>, Zhuosheng Zhang<sup>1</sup>, Weiran Huang<sup>1,4</sup>
+Zhanwang Liu<sup>1</sup>, Yuting Li<sup>1</sup>, Haoyuan Gao<sup>1</sup>, Yexin Li<sup>4</sup>, Linghe Kong<sup>1</sup>, Lichao Sun<sup>3</sup>, Weiran Huang<sup>1,2,4</sup>
 </p>
 
 <p>
 <sup>1</sup> School of Computer Science, Shanghai Jiao Tong University<br/>
-<sup>2</sup> Ant Group<br/>
-<sup>3</sup> Zhongguancun Academy<br/>
-<sup>4</sup> Shanghai Innovation Institute
+<sup>2</sup> Shanghai Innovation Institute<br/>
+<sup>3</sup> Lehigh University<br/>
+<sup>4</sup> State Key Laboratory of General Artificial Intelligence, BIGAI
 </p>
-
 </div>
+
 ## 🎉 News
 - [x] **[2026.01.26]** Our paper has been accepted by ICLR 2026!
 ## Table of Content
