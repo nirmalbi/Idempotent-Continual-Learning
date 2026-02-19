@@ -107,8 +107,8 @@ class SequentialCIFAR10(ContinualDataset):
     def get_backbone():
         return resnet18(SequentialCIFAR10.N_CLASSES_PER_TASK
                        * SequentialCIFAR10.N_TASKS)
-    def get_backbone3(self):
-        return resnet18_id2(SequentialCIFAR10.N_CLASSES_PER_TASK * SequentialCIFAR10.N_TASKS, nf=int(64*self.args.resnet_width),use_cos=self.args.use_cos)
+    def get_backboneid(self):
+        return resnet18_id2(SequentialCIFAR10.N_CLASSES_PER_TASK * SequentialCIFAR10.N_TASKS, nf=int(64*self.args.resnet_width))
     @staticmethod
     def get_loss():
         return F.cross_entropy

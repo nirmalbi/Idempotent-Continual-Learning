@@ -10,11 +10,9 @@ import socket
 import sys
 import uuid
 from argparse import ArgumentParser
-
-import numpy  # needed (don't change it)
+import numpy  
 import setproctitle
 import torch
-
 from datasets import NAMES as DATASET_NAMES
 from datasets import ContinualDataset, get_dataset
 from models import get_all_models, get_model
@@ -43,10 +41,8 @@ def lecun_fix():
 
 def parse_args():
     parser, args = parse_known_args()
-    
     args = parse_model_args(parser, args)
     return args
-
 
 def parse_known_args():
     parser = ArgumentParser(description='mammoth', allow_abbrev=False)
@@ -55,8 +51,6 @@ def parse_known_args():
     parser.add_argument('--load_best_args', action='store_true',
                         help='Loads the best arguments for each method, '
                              'dataset and memory buffer.')
-    
-    # torch.set_num_threads(4)
     add_management_args(parser)
     args = parser.parse_known_args()[0]
     return parser, args
@@ -64,57 +58,54 @@ def parse_known_args():
 
 def parse_model_args(parser, args):
     mod = importlib.import_module('models.' + args.model)
-    #parser.add_argument('--weightmask', type=float, help='Penalty weight for mask ratio.')
-    parser.add_argument('--online', action='store_true', help='online continual learning.')
-    parser.add_argument("--use_cos", type=str2bool, default=False,
-                        help="If set, use cosine classifer")
-    parser.add_argument("--savecheckpoint", type=str2bool, default=False,
-                        help="If set, save checkpoint after training")
- 
+
+    def add_common_args(target_parser):
+        target_parser.add_argument(
+            "--savecheckpoint",
+            type=str2bool,
+            default=False,
+            help="If set, save checkpoint after training",
+        )
+
+    add_common_args(parser)
+
     if args.load_best_args:
-        
         parser.add_argument('--dataset', type=str, required=True,
                             choices=DATASET_NAMES,
                             help='Which dataset to perform experiments on.')
-        parser.add_argument('--half_data_in_first_task', action='store_true', help='use half of data for first expirience')
+        parser.add_argument('--half_data_in_first_task', action='store_true',
+                            help='use half of data for first expirience')
         parser.add_argument('--device', type=str, default='cuda:0')
-        
 
-        
-        if hasattr(mod, 'Buffer'):
+        has_buffer = hasattr(mod, 'Buffer')
+        if has_buffer:
             parser.add_argument('--buffer_size', type=int, required=True,
                                 help='The size of the memory buffer.')
-        #args = parser.parse_args()
+
         args = parser.parse_known_args()[0]
         if args.model == 'joint':
             best = best_args[args.dataset]['sgd']
         else:
             best = best_args[args.dataset][args.model]
-        if hasattr(mod, 'Buffer'):
-            best = best[args.buffer_size]
-        else:
-            best = best[-1]
-        get_parser = getattr(mod, 'get_parser')
-        parser = get_parser()
-        parser.add_argument('--online', action='store_true', help='online continual learning.')
-        parser.add_argument("--use_cos", type=str2bool, default=False,
-                        help="If set, use cosine classifer")
-        parser.add_argument("--savecheckpoint", type=str2bool, default=False,
-                        help="If set, save checkpoint after training")
-        to_parse = sys.argv[1:] + ['--' + k + '=' + str(v) for k, v in best.items()]
-        to_parse.remove('--load_best_args')
+
+        best = best[args.buffer_size] if has_buffer else best[-1]
+
+        parser = getattr(mod, 'get_parser')()
+        add_common_args(parser)
+
+        to_parse = list(sys.argv[1:])
+        while '--load_best_args' in to_parse:
+            to_parse.remove('--load_best_args')
+        to_parse += ['--' + k + '=' + str(v) for k, v in best.items()]
+
         args = parser.parse_args(to_parse)
         if args.model == 'joint' and args.dataset == 'mnist-360':
             args.model = 'joint_gcl'
-        
-    else:
+        return args
 
-        get_parser = getattr(mod, 'get_parser')
-        parser = get_parser()
-        args = parser.parse_args()
-        
-    
-    return args
+    parser = getattr(mod, 'get_parser')()
+    add_common_args(parser)
+    return parser.parse_args()
 
 
 def run_experiment(args):
@@ -140,13 +131,12 @@ def run_experiment(args):
         args.batch_size = dataset.get_batch_size()
     if hasattr(importlib.import_module('models.' + args.model), 'Buffer') and args.minibatch_size is None:
         args.minibatch_size = dataset.get_minibatch_size()
-    if args.model=="idempotent2":  
-        backbone = dataset.get_backbone3()
+    if args.model=="ider":  
+        backbone = dataset.get_backboneid()
         print("use changed model middle")
     else:
         backbone = dataset.get_backbone()
     print(f'backbone number of parameters = {get_n_parameters(backbone)}')
-    # print(backbone)
 
     loss = dataset.get_loss()
     model = get_model(args, backbone, loss, dataset.get_transform())
@@ -161,9 +151,6 @@ def run_experiment(args):
 
     # set job name
     setproctitle.setproctitle('{}_{}_{}'.format(args.model, args.buffer_size if 'buffer_size' in args else 0, args.dataset))
-    if args.online == True:
-        args.n_epochs = 1
-    # args.n_epochs = 1
     if isinstance(dataset, ContinualDataset):
         train(model, dataset, args)
     else:
