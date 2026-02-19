@@ -77,7 +77,7 @@ bash run_para_tinyimg.sh
 After the paper has been accepted, we rerun everything to provide complete logs and checkpoints for our Table 1 in the paper. The example results are ResNet18 on different datasets using ER and ER+ID as baseline methods with different buffers and 0-4 seeds.
 | **Dataset** | **Buffer** | **Method** | **Forgetting(⬇️)** | **TIL(⬆️)** | **CIL(⬆️)** | **Checkpoint** |
 |---|---:|---|---:|---:|---:|---|
-| CIFAR-10 | 200 | ER | 59.71 ± 2.62 | 91.48 ± 0.93 | 48.89 ± 2.19 | ... |
+| CIFAR-10 | 200 | ER | 59.71 ± 2.62 | 91.48 ± 0.93 | 48.89 ± 2.19 | [pth](https://github.com/YutingLi0606/Idempotent-Continual-Learning/tree/main/experiments/seq-cifar10/buffer_200/erid_seed_0.pth) |
 |  |  | ER+ID | 16.89 ± 2.26 | 95.87 ± 0.36 | 70.68 ± 1.10 | ... |
 |  | 500 | ER | 44.75 ± 2.94  | 93.38 ± 0.36 | 60.62 ± 2.46 | ... |
 |  |  | ER+ID | 11.59 ± 2.13 | 96.20 ± 0.40 | 75.52 ± 1.35 | ... |
