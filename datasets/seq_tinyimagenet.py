@@ -150,9 +150,9 @@ class SequentialTinyImagenet(ContinualDataset):
     def get_backbone():
         return resnet18(SequentialTinyImagenet.N_CLASSES_PER_TASK
                         * SequentialTinyImagenet.N_TASKS)
-    def get_backbone3(self):
+    def get_backboneid(self):
         return resnet18_id2(SequentialTinyImagenet.N_CLASSES_PER_TASK
-                        * SequentialTinyImagenet.N_TASKS,use_cos=self.args.use_cos)
+                        * SequentialTinyImagenet.N_TASKS)
     
     @staticmethod
     def get_loss():
@@ -187,7 +187,7 @@ class SequentialTinyImagenet(ContinualDataset):
         return SequentialTinyImagenet.get_batch_size()
     @staticmethod
     def get_scheduler(model, args) -> torch.optim.lr_scheduler:
-        if model.NAME =='idclser' or args.n_epochs==50:
+        if  args.n_epochs==50:
             model.opt = torch.optim.SGD(model.net.parameters(), lr=args.lr, weight_decay=args.optim_wd, momentum=args.optim_mom)
             scheduler = torch.optim.lr_scheduler.MultiStepLR(model.opt, [35, 45], gamma=0.1, verbose=False)
         else:

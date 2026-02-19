@@ -120,8 +120,8 @@ class SequentialCIFAR100(ContinualDataset):
         return resnet18(SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS, nf=int(64*self.args.resnet_width))
         # model = mobilenet_v2(num_classes=SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS)
         # return model  
-    def get_backbone3(self):
-        return resnet18_id2(SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS, nf=int(64*self.args.resnet_width),use_cos=self.args.use_cos)
+    def get_backboneid(self):
+        return resnet18_id2(SequentialCIFAR100.N_CLASSES_PER_TASK * SequentialCIFAR100.N_TASKS, nf=int(64*self.args.resnet_width))
     @staticmethod
     @staticmethod
     def get_loss():
@@ -152,17 +152,9 @@ class SequentialCIFAR100(ContinualDataset):
     @staticmethod
     def get_minibatch_size():
         return SequentialCIFAR100.get_batch_size()
-    """
-    @staticmethod
-    def get_scheduler(model, args) -> torch.optim.lr_scheduler:
-        
-        return None
-    """
+
     @staticmethod
     def get_scheduler(model, args) -> torch.optim.lr_scheduler:
         model.opt = torch.optim.SGD(model.net.parameters(), lr=args.lr, weight_decay=args.optim_wd, momentum=args.optim_mom)
         scheduler = torch.optim.lr_scheduler.MultiStepLR(model.opt, [35, 45], gamma=0.1, verbose=False)
-        #model.opt = torch.optim.SGD(model.net.parameters(), lr=args.lr,
-        #             momentum=0.9, weight_decay=5e-4)
-        #scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(model.opt, T_max=50)
         return scheduler

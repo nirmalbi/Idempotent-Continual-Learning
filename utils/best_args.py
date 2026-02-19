@@ -679,12 +679,11 @@ best_args = {
                                  'batch_size': 32,
                                  'n_epochs': 50},
                          },
-                    'idempotent2': {200: {'lr': 0.03,
+                    'ider': {200: {'lr': 0.03,
                                   'minibatch_size': 32,
                                   'weighta': 0.05,
                                    'weightb': 0.05,
                                    'weightc': 0.5,
-                                   'alpha_bfp': 0.0,
                                    'weightmask': 1.0,
                                   'batch_size': 32,
                                   'n_epochs': 50},
@@ -693,28 +692,11 @@ best_args = {
                                     'weighta': 0.05,
                                    'weightb': 0.05,
                                    'weightc': 0.5,
-                                   'alpha_bfp': 0.0,
                                    'weightmask': 1.0,                               
                                   'batch_size': 32,
                                   'n_epochs': 50},
                             5120: {'lr': 0.03,
-                                   'minibatch_size': 32,
-                                   
-                                   'batch_size': 32,
-                                   'n_epochs': 50}},
-                    'derloss': {200: {'lr': 0.03,
-                                  'minibatch_size': 32,
-                                  'alpha': 0.3,
-                                  'batch_size': 32,
-                                  'n_epochs': 50},
-                            500: {'lr': 0.03,
-                                  'minibatch_size': 32,
-                                  'alpha': 0.3,
-                                  'batch_size': 32,
-                                  'n_epochs': 50},
-                            5120: {'lr': 0.03,
-                                   'minibatch_size': 32,
-                                   'alpha': 0.3,
+                                   'minibatch_size': 32,                                
                                    'batch_size': 32,
                                    'n_epochs': 50}},
                       'bic': {200: {'lr': 0.03,
@@ -725,8 +707,7 @@ best_args = {
                                  'minibatch_size': 32,
                                  'batch_size': 32,
                                  'n_epochs': 50},
-                         },
-                    
+                         },        
                     'derpp': {200: {'lr': 0.03,
                                     'minibatch_size': 32,
                                     'alpha': 0.1,
@@ -927,34 +908,12 @@ best_args = {
                                    'alpha': 0.1,
                                    'batch_size': 32,
                                    'n_epochs': 100}},
-                    'derloss': {200: {'lr': 0.03,
-                                  'minibatch_size': 32,
-                                  'softmax_temp': 2.0,
-                                  'alpha': 0.1,
-                                  'batch_size': 32,
-                                  'n_epochs': 100},
-                            500: {'lr': 0.03,
-                                  'minibatch_size': 32,
-                                  'alpha': 0.1,
-                                  'batch_size': 32,
-                                  'n_epochs': 100},
-                            4000: {'lr': 0.03,
-                                   'minibatch_size': 32,
-                                   'alpha': 0.1,
-                                   'batch_size': 32,
-                                   'n_epochs': 100},
-                            5120: {'lr': 0.03,
-                                   'minibatch_size': 32,
-                                   'alpha': 0.1,
-                                   'batch_size': 32,
-                                   'n_epochs': 100}},
-                    'idempotent2': {200: {'lr': 0.03,
+                    'ider': {200: {'lr': 0.03,
                                   'minibatch_size': 32,
                                   'softmax_temp': 2.0,
                                   'weighta': 0.5, 
                                   'weightb': 0.4, 
                                   'weightc': 0.5,
-                                  'alpha_bfp': 0.0,
                                   'weightmask': 1.0,
                                   'batch_size': 32,
                                   'n_epochs': 100},
@@ -963,9 +922,7 @@ best_args = {
                                    'weighta': 0.5, 
                                   'weightb': 0.4, 
                                   'weightc': 0.5,
-                                  'alpha_bfp': 0.0,
                                   'weightmask': 1.0,
-                                
                                   'batch_size': 32,
                                   'n_epochs': 50},
                             4000: {'lr': 0.03,
@@ -973,9 +930,7 @@ best_args = {
                                    'weighta': 0.5, 
                                    'weightb': 0.4, 
                                    'weightc': 0.5,
-                                   'alpha_bfp': 0.0,
-                                   'weightmask': 1.0,
-                                 
+                                   'weightmask': 1.0,             
                                    'batch_size': 32,
                                    'n_epochs': 50},
                             5120: {'lr': 0.03,
@@ -1135,9 +1090,9 @@ best_args = {
 		2000: {"lr": 0.03,  "alpha_distill": 0.1, 'optim_mom': 0, 'optim_wd': 0,
 			"alpha_ce": 0.5}
         },
-         'idempotent2': {
-            500: {"lr": 0.03,   'optim_mom': 0, 'optim_wd': 0,   'weighta': 0.5, 'weightb': 0.4, 'weightc': 0.5,'alpha_bfp': 0.0,'weightmask': 1.0},
-		2000: {"lr": 0.03,  'optim_mom': 0, 'optim_wd': 0,   'weighta': 0.5, 'weightb': 0.4, 'weightc': 0.5,'alpha_bfp': 0.0,'weightmask': 1.0}
+         'ider': {
+            500: {"lr": 0.03,   'optim_mom': 0, 'optim_wd': 0,   'weighta': 0.5, 'weightb': 0.4, 'weightc': 0.5,'weightmask': 1.0},
+		2000: {"lr": 0.03,  'optim_mom': 0, 'optim_wd': 0,   'weighta': 0.5, 'weightb': 0.4, 'weightc': 0.5,'weightmask': 1.0}
         },
 
         'gdumb': {
@@ -1182,399 +1137,10 @@ best_args = {
             500: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.1, 'beta': 0.5},
             2000: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.1, 'beta': 0.5}
         },
-        'derloss': {
-             500: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3},
-            2000: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3}
-        },
-        'derlossm': {
-             500: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3},
-            2000: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3}
-        },
-         'derlossema': {
-             500: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3},
-            2000: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3}
-        },
-        'derlossb': {
-             500: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3},
-            2000: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3}
-        },
-          'derlossh': {
-             500: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3},
-            2000: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3}
-        },
-         'derloss2': {
-             500: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3},
-            2000: {'lr': 0.03, 'optim_mom': 0, 'optim_wd': 0, 'alpha': 0.3}
-        },
-      
-                         'clser': {
-                        200: {
-                            'reg_weight': 0.15,
-                            'stable_model_update_freq': 0.1,
-                            'stable_model_alpha': 0.999,
-                            'plastic_model_update_freq': 0.3,
-                            'plastic_model_alpha': 0.999,
-                            'lr': 0.1,
-                            'minibatch_size': 32,
-                            'batch_size': 32,
-                            'n_epochs': 50,
-                        },
-                        500: {
-                            'reg_weight': 0.15,
-                            'stable_model_update_freq': 0.1,
-                            'stable_model_alpha': 0.999,
-                            'plastic_model_update_freq': 0.5,
-                            'plastic_model_alpha': 0.999,
-                            'lr': 0.1,
-                            'minibatch_size': 32,
-                            'batch_size': 32,
-                            'n_epochs': 50,
-                        },
-                        2000: {
-                            'reg_weight': 0.15,
-                            'stable_model_update_freq': 0.8,
-                            'stable_model_alpha': 0.999,
-                            'plastic_model_update_freq': 1.0,
-                            'plastic_model_alpha': 0.999,
-                            'lr': 0.1,
-                            'minibatch_size': 32,
-                            'batch_size': 32,
-                            'n_epochs': 50,
-                        }},
+        
         'xder': {
             500: {'m': 0.7, 'alpha': 0.3, 'beta': 0.8, 'gamma': 0.85, 'optim_wd': 0, 'lambd': 0.05, 'eta': 0.001, 'lr': 0.03, 'simclr_temp': 5, 'optim_mom': 0, 'simclr_batch_size': 64, 'simclr_num_aug': 2},
             2000: {'m': 0.2, 'alpha': 0.6, 'beta': 0.9, 'gamma': 0.85, 'optim_wd': 0, 'lambd': 0.05, 'eta': 0.01, 'lr': 0.03, 'simclr_temp': 5, 'optim_mom': 0, 'simclr_batch_size': 64, 'simclr_num_aug': 2}
         }
-    },
-
-  'gcil-cifar100': {
-        'sgd': {
-            'unif': {
-            -1: {
-                'lr': 0.1,
-                'batch_size': 32,
-                'n_epochs': 100
-                }
-            },
-            'longtail': {
-                -1: {
-                    'lr': 0.1,
-                    'batch_size': 32,
-                    'n_epochs': 100
-                }
-            },
-        },
-        'er': {
-            'unif': {
-                200: {
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                500: {
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                1000: {
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-            },
-            'longtail': {
-                200: {
-                    'alpha': 0.2,
-                    'beta': 0.6,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                500: {
-                    'alpha': 0.2,
-                    'beta': 0.8,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                1000: {
-                    'alpha': 0.3,
-                    'beta': 0.9,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-            },
-        },
-        'derpp': {
-            'unif': {
-                200: {
-                    'alpha': 0.2,
-                    'beta': 0.5,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                500: {
-                    'alpha': 0.2,
-                    'beta': 0.6,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                1000: {
-                    'alpha': 0.3,
-                    'beta': 0.6,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-            },
-            'longtail': {
-                200: {
-                    'alpha': 0.2,
-                    'beta': 0.6,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                500: {
-                    'alpha': 0.2,
-                    'beta': 0.8,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                1000: {
-                    'alpha': 0.3,
-                    'beta': 0.9,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-            },
-        },
-        'idempotent2': {
-            'unif': {
-                200: {
-                    
-                    'lr': 0.03,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                },
-                500: {
-                   
-                    'lr': 0.03,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                },
-                1000: {
-                   
-                    'lr': 0.03,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                },
-            },
-            'longtail': {
-                200: {
-                   
-                    'lr': 0.03,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                },
-                500: {
-                  
-                    'lr': 0.03,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                },
-                1000: {
-                   
-                    'lr': 0.03,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                },
-            },
-        },
-        'clser': {
-            'unif': {
-                200: {
-                    'reg_weight': 0.15,
-                    'stable_model_update_freq': 0.6,
-                    'stable_model_alpha': 0.999,
-                    'plastic_model_update_freq': 0.7,
-                    'plastic_model_alpha': 0.999,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 200,
-                },
-                500: {
-                    'reg_weight': 0.15,
-                    'stable_model_update_freq': 0.6,
-                    'stable_model_alpha': 0.999,
-                    'plastic_model_update_freq': 0.9,
-                    'plastic_model_alpha': 0.999,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                1000: {
-                    'reg_weight': 0.15,
-                    'stable_model_update_freq': 0.6,
-                    'stable_model_alpha': 0.999,
-                    'plastic_model_update_freq': 0.8,
-                    'plastic_model_alpha': 0.999,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-            },
-            'longtail': {
-                200: {
-                    'reg_weight': 0.1,
-                    'stable_model_update_freq': 0.6,
-                    'stable_model_alpha': 0.999,
-                    'plastic_model_update_freq': 0.7,
-                    'plastic_model_alpha': 0.999,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                500: {
-                    'reg_weight': 0.1,
-                    'stable_model_update_freq': 0.6,
-                    'stable_model_alpha': 0.999,
-                    'plastic_model_update_freq': 0.7,
-                    'plastic_model_alpha': 0.999,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-                1000: {
-                    'reg_weight': 0.1,
-                    'stable_model_update_freq': 0.6,
-                    'stable_model_alpha': 0.999,
-                    'plastic_model_update_freq': 0.8,
-                    'plastic_model_alpha': 0.999,
-                    'lr': 0.1,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 100,
-                },
-            },
-        },
-        'scommer': {
-            'longtail': {
-                200: {
-                    'kw_criterion': 'abs_sum',
-                    'kw_relu': 1,
-                    'kw': (0.9, 0.9, 0.9, 0.9),
-                    'apply_heterogeneous_dropout': 1,
-                    'layerwise_dropout': (0, 0, 0, 1),
-                    'dropout_alpha': (0.5, 0.5, 5, 5),
-                    'classwise_dropout_alpha': (2.0, 2.0, 2.0, 2.0),
-                    'dropout_warmup': 30,
-                    'init_dropout': 1,
-                    'init_active_factor': (1.1, 1.1, 1.1, 1.1),
-                    'reg_weight': 0.20,
-                    'ema_update_freq': 0.5,
-                    'ema_alpha': 0.999,
-                    'lr': 0.05,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                    'save_interim': False,
-                    'save_model': False
-                },
-                500: {
-                    'kw_criterion': 'abs_sum',
-                    'kw_relu': 1,
-                    'kw': (0.9, 0.9, 0.9, 0.9),
-                    'apply_heterogeneous_dropout': 1,
-                    'layerwise_dropout': (0, 0, 0, 1),
-                    'dropout_alpha': (0.5, 0.5, 5, 5),
-                    'classwise_dropout_alpha': (3.0, 3.0, 3.0, 3.0),
-                    'dropout_warmup': 30,
-                    'init_dropout': 1,
-                    'init_active_factor': (1.1, 1.1, 1.1, 1.1),
-                    'reg_weight': 0.20,
-                    'ema_update_freq': 0.6,
-                    'ema_alpha': 0.999,
-                    'lr': 0.05,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                    'save_interim': False,
-                    'save_model': False
-                },
-            },
-            'unif': {
-                200: {
-                    'kw_criterion': 'abs_sum',
-                    'kw_relu': 1,
-                    'kw': (0.9, 0.9, 0.9, 0.9),
-                    'apply_heterogeneous_dropout': 1,
-                    'layerwise_dropout': (0, 0, 0, 1),
-                    'dropout_alpha': (0.5, 0.5, 5, 5),
-                    'classwise_dropout_alpha': (3.0, 3.0, 3.0, 3.0),
-                    'dropout_warmup': 30,
-                    'init_dropout': 1,
-                    'init_active_factor': (1.1, 1.1, 1.1, 1.1),
-                    'reg_weight': 0.20,
-                    'ema_update_freq': 0.6,
-                    'ema_alpha': 0.999,
-                    'lr': 0.05,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                    'save_interim': False,
-                    'save_model': False
-                },
-                500: {
-                    'kw_criterion': 'abs_sum',
-                    'kw_relu': 1,
-                    'kw': (0.9, 0.9, 0.9, 0.9),
-                    'apply_heterogeneous_dropout': 1,
-                    'layerwise_dropout': (0, 0, 0, 1),
-                    'dropout_alpha': (0.5, 0.5, 5, 5),
-                    'classwise_dropout_alpha': (3.0, 3.0, 3.0, 3.0),
-                    'dropout_warmup': 30,
-                    'init_dropout': 1,
-                    'init_active_factor': (1.1, 1.1, 1.1, 1.1),
-                    'reg_weight': 0.20,
-                    'ema_update_freq': 0.6,
-                    'ema_alpha': 0.999,
-                    'lr': 0.05,
-                    'minibatch_size': 32,
-                    'batch_size': 32,
-                    'n_epochs': 50,
-                    'save_interim': False,
-                    'save_model': False
-                },
-            },
-        },
-}
+    }
 }

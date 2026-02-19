@@ -15,7 +15,6 @@ def backward_transfer(results):
 
     return np.mean(li)
 
-
 def forward_transfer(results, random_results):
     n_tasks = len(results)
     li = []
@@ -23,7 +22,6 @@ def forward_transfer(results, random_results):
         li.append(results[i - 1][i] - random_results[i])
 
     return np.mean(li)
-
 
 def forgetting(results):
     n_tasks = len(results)
@@ -48,7 +46,6 @@ def calc_aurc_eaurc(softmax, correct):
 
     return aurc, eaurc
 
-# AUPR ERROR
 def calc_fpr_aupr(softmax, correct):
     softmax = np.array(softmax)
     correctness = np.array(correct)
@@ -65,7 +62,7 @@ def calc_fpr_aupr(softmax, correct):
 
 
     return auroc, aupr_success, aupr_err, fpr_in_tpr_95
-#ACE
+
 def calc_ace(softmax_outputs, targets, num_bins=15):
     """
     Calculate Adaptive Calibration Error (ACE)
@@ -78,20 +75,16 @@ def calc_ace(softmax_outputs, targets, num_bins=15):
     Returns:
         ace: Adaptive Calibration Error value
     """
-    # 获取最大概率（置信度）和预测类别
+
     confidences = np.max(softmax_outputs, axis=1)
     predictions = np.argmax(softmax_outputs, axis=1)
     
-    # 计算准确性（正确预测为1，错误预测为0）
     accuracies = (predictions == targets).astype(float)
-    
-    # 使用等频分箱（quantile-based binning）而不是等宽分箱
-    # 这是ACE与ECE的主要区别
+
     bin_boundaries = np.quantile(confidences, np.linspace(0, 1, num_bins + 1))
-    bin_boundaries[0] = 0.0  # 确保第一个边界是0
-    bin_boundaries[-1] = 1.0  # 确保最后一个边界是1
+    bin_boundaries[0] = 0.0  
+    bin_boundaries[-1] = 1.0  
     
-    # 去除重复的边界值（当数据分布不均匀时可能出现）
     bin_boundaries = np.unique(bin_boundaries)
     actual_num_bins = len(bin_boundaries) - 1
     
@@ -99,27 +92,22 @@ def calc_ace(softmax_outputs, targets, num_bins=15):
     total_samples = len(confidences)
     
     for i in range(actual_num_bins):
-        # 找到属于当前bin的样本
         bin_lower = bin_boundaries[i]
         bin_upper = bin_boundaries[i + 1]
         
-        if i == actual_num_bins - 1:  # 最后一个bin包含上边界
+        if i == actual_num_bins - 1:  
             in_bin = (confidences >= bin_lower) & (confidences <= bin_upper)
         else:
             in_bin = (confidences >= bin_lower) & (confidences < bin_upper)
         
         if np.sum(in_bin) > 0:
-            # 计算bin中的平均置信度和准确率
             bin_confidence = np.mean(confidences[in_bin])
             bin_accuracy = np.mean(accuracies[in_bin])
             bin_size = np.sum(in_bin)
-            
-            # 加权计算ACE
             ace += (bin_size / total_samples) * abs(bin_confidence - bin_accuracy)
     
     return ace
 
-# ECE
 def calc_ece(softmax, label, bins=15):
     bin_boundaries = torch.linspace(0, 1, bins + 1)
     bin_lowers = bin_boundaries[:-1]

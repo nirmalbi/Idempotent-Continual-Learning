@@ -7,7 +7,6 @@ import math
 import sys
 from argparse import Namespace
 from typing import Tuple
-from sklearn.metrics import roc_auc_score, roc_curve
 import torch
 from datasets import get_dataset
 from datasets.utils.continual_dataset import ContinualDataset
@@ -16,48 +15,10 @@ from typing import Tuple, List
 from utils.loggers import *
 from utils.mlflow_logger import MLFlowLogger
 from utils.status import ProgressBar
-from utils.metrics import backward_transfer, forward_transfer, forgetting
 import torch.nn.functional as F
 import utils.metrics
-def compute_ece(probs, labels, n_bins=15):
-    # probs: (N, C) softmax输出，labels: (N,)
-    confidences, predictions = torch.max(probs, 1)
-    confidences = confidences.cpu().numpy()
-    predictions = predictions.cpu().numpy()
-    labels = labels.cpu().numpy()
-    bins = np.linspace(0, 1, n_bins + 1)
-    ece = 0.0
-    N = len(confidences)
-    for i in range(n_bins):
-        bin_lower = bins[i]
-        bin_upper = bins[i + 1]
-        mask = (confidences > bin_lower) & (confidences <= bin_upper)
-        bin_size = np.sum(mask)
-        if bin_size > 0:
-            acc = np.mean(predictions[mask] == labels[mask])
-            conf = np.mean(confidences[mask])
-            ece += (bin_size / N) * np.abs(acc - conf)
-    return ece
 
-def compute_ace(probs, labels, n_bins=15):
-    confidences, predictions = torch.max(probs, 1)
-    confidences = confidences.cpu().numpy()
-    predictions = predictions.cpu().numpy()
-    labels = labels.cpu().numpy()
-    N = len(confidences)
-    sorted_indices = np.argsort(confidences)
-    bin_size = N // n_bins
-    ace = 0.0
-    for i in range(n_bins):
-        start = i * bin_size
-        end = (i + 1) * bin_size if i < n_bins - 1 else N
-        bin_indices = sorted_indices[start:end]
-        if len(bin_indices) == 0:
-            continue
-        acc = np.mean(predictions[bin_indices] == labels[bin_indices])
-        conf = np.mean(confidences[bin_indices])
-        ace += (len(bin_indices) / N) * np.abs(acc - conf)
-    return ace
+
 def evaluate_ece(model: ContinualModel, dataset: ContinualDataset, last=False) -> Tuple[List[float], List[float], float, float, float]:
     """
     Evaluates accuracy and computes AURC, FPR95, AUROC for each loader, then averages.
@@ -68,18 +29,15 @@ def evaluate_ece(model: ContinualModel, dataset: ContinualDataset, last=False) -
     status = model.net.training
     model.net.eval()
     accs, accs_mask_classes = [], []
-    aurc_list, fpr95_list, auroc_list,ece_list, ace_list= [], [], [],[],[]
-
+    ece_list = []
 
     for k, test_loader in enumerate(dataset.test_loaders):
         if last and k < len(dataset.test_loaders) - 1:
             continue
 
         correct, correct_mask_classes, total = 0.0, 0.0, 0.0
-        confidences, correctness = [], []
         val_log = {'softmax' : [], 'correct' : [], 'logit' : [], 'target':[]}
         
-
         for data in test_loader:
             with torch.no_grad():
                 inputs, labels = data
@@ -106,48 +64,20 @@ def evaluate_ece(model: ContinualModel, dataset: ContinualDataset, last=False) -
         for key in val_log : 
             val_log[key] = np.concatenate(val_log[key])
         acc = 100. * val_log['correct'].mean()
-
         ece = utils.metrics.calc_ece(val_log['softmax'], val_log['target'], bins=15)
-        ace = utils.metrics.calc_ace(val_log['softmax'], val_log['target'])
-    # aurc, eaurc
-        aurc, eaurc = utils.metrics.calc_aurc_eaurc(val_log['softmax'], val_log['correct'])
-    # fpr, aupr
-        auroc, aupr_success, aupr, fpr = utils.metrics.calc_fpr_aupr(val_log['softmax'], val_log['correct'])
-
-
-
         accs.append(correct / total * 100 if 'class-il' in model.COMPATIBILITY else 0)
         accs_mask_classes.append(correct_mask_classes / total * 100)
         ece_list.append(ece*100)
-        ace_list.append(ace*100)
-        # AURC
-        aurc_list.append(aurc*1000)
-
-        # AUROC
-        auroc_list.append(auroc*100)
-
-        # FPR95
-        fpr95_list.append(fpr*100)
-
     model.net.train(status)
 
     # averagge
-    mean_aurc = np.mean(aurc_list)
-    mean_fpr95 = np.mean(fpr95_list)
-    mean_auroc = np.mean(auroc_list)
     mean_ece = np.mean(ece_list)
-    mean_ace = np.mean(ace_list)
-    # 
     print('evaluation acc:', accs)
-    print(f'AURC per loader: {aurc_list}')
-    print(f'FPR95 per loader: {fpr95_list}')
-    print(f'AUROC per loader: {auroc_list}')
     print(f'ECE per loader: {ece_list}')
-    print(f'ACE per loader: {ace_list}')
-    print(f'Mean AURC: {mean_aurc:.4f}, Mean FPR95: {mean_fpr95:.4f}, Mean AUROC: {mean_auroc:.4f},Mean ECE: {mean_ece:.4f},Mean ACE: {mean_ace:.4f}')
+    print(f'Mean ECE: {mean_ece:.4f}')
 
-    return accs, accs_mask_classes, mean_aurc, mean_fpr95, mean_auroc
-def evaluate_ece2(model: ContinualModel, dataset: ContinualDataset, last=False) -> Tuple[List[float], List[float], float, float, float]:
+    return accs, accs_mask_classes
+def evaluate_eceid(model: ContinualModel, dataset: ContinualDataset, last=False) -> Tuple[List[float], List[float], float, float, float]:
     """
     Evaluates accuracy and computes AURC, FPR95, AUROC for each loader, then averages.
     :param model: model to evaluate
@@ -157,18 +87,14 @@ def evaluate_ece2(model: ContinualModel, dataset: ContinualDataset, last=False) 
     status = model.net.training
     model.net.eval()
     accs, accs_mask_classes = [], []
-    aurc_list, fpr95_list, auroc_list,ece_list, ace_list= [], [], [],[],[]
-
+    ece_list = []
 
     for k, test_loader in enumerate(dataset.test_loaders):
         if last and k < len(dataset.test_loaders) - 1:
             continue
-
         correct, correct_mask_classes, total = 0.0, 0.0, 0.0
-        confidences, correctness = [], []
         val_log = {'softmax' : [], 'correct' : [], 'logit' : [], 'target':[]}
         
-
         for data in test_loader:
             with torch.no_grad():
                 inputs, labels = data
@@ -197,49 +123,21 @@ def evaluate_ece2(model: ContinualModel, dataset: ContinualDataset, last=False) 
         for key in val_log : 
             val_log[key] = np.concatenate(val_log[key])
         acc = 100. * val_log['correct'].mean()
-
         ece = utils.metrics.calc_ece(val_log['softmax'], val_log['target'], bins=15)
-        ace = utils.metrics.calc_ace(val_log['softmax'], val_log['target'])
-    # aurc, eaurc
-        aurc, eaurc = utils.metrics.calc_aurc_eaurc(val_log['softmax'], val_log['correct'])
-    # fpr, aupr
-        auroc, aupr_success, aupr, fpr = utils.metrics.calc_fpr_aupr(val_log['softmax'], val_log['correct'])
-
-
-
         accs.append(correct / total * 100 if 'class-il' in model.COMPATIBILITY else 0)
         accs_mask_classes.append(correct_mask_classes / total * 100)
-
-        # AURC
-        aurc_list.append(aurc*1000)
-
         ece_list.append(ece*100)
-        ace_list.append(ace*100)
-
-        # AUROC
-        auroc_list.append(auroc*100)
-
-        # FPR95
-        fpr95_list.append(fpr*100)
 
     model.net.train(status)
 
     # average
-    mean_aurc = np.mean(aurc_list)
-    mean_fpr95 = np.mean(fpr95_list)
-    mean_auroc = np.mean(auroc_list)
     mean_ece = np.mean(ece_list)
-    mean_ace = np.mean(ace_list)
     # 
     print('evaluation acc:', accs)
-    print(f'AURC per loader: {aurc_list}')
-    print(f'FPR95 per loader: {fpr95_list}')
-    print(f'AUROC per loader: {auroc_list}')
     print(f'ECE per loader: {ece_list}')
-    print(f'ACE per loader: {ace_list}')
-    print(f'Mean AURC: {mean_aurc:.4f}, Mean FPR95: {mean_fpr95:.4f}, Mean AUROC: {mean_auroc:.4f},Mean ECE: {mean_ece:.4f},Mean ACE: {mean_ace:.4f}')
+    print(f'Mean ECE: {mean_ece:.4f}')
 
-    return accs, accs_mask_classes, mean_aurc, mean_fpr95, mean_auroc
+    return accs, accs_mask_classes
 
 
 
@@ -375,7 +273,7 @@ def train(model: ContinualModel, dataset: ContinualDataset,
             model.net.train()
             _, _ = dataset_copy.get_data_loaders()
         if model.NAME != 'icarl' and model.NAME != 'pnn':
-            if model.NAME =='idempotent2':
+            if model.NAME =='ider':
                 random_results_class, random_results_task = evaluateid(model, dataset_copy)
             else:
                 random_results_class, random_results_task = evaluate(model, dataset_copy)
@@ -392,19 +290,15 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if hasattr(model, 'begin_task'):
             model.begin_task(dataset)
         if t and not args.ignore_other_metrics and not args.debug:
-            if model.NAME =='idempotent2':
+            if model.NAME =='ider':
                 accs = evaluateid(model, dataset, last=True)
             else:
                 accs = evaluate(model, dataset, last=True)
-
-
             results[t-1] = results[t-1] + accs[0]
             if dataset.SETTING == 'class-il':
                 results_mask_classes[t-1] = results_mask_classes[t-1] + accs[1]
-
         scheduler = dataset.get_scheduler(model, args)
-        for epoch in range(model.args.n_epochs):
-           
+        for epoch in range(model.args.n_epochs):          
             if args.model == 'joint':
                 continue
             for i, data in enumerate(train_loader):
@@ -435,14 +329,14 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if hasattr(model, 'end_task'):
             model.end_task(dataset)
 
-        if model.NAME =='idempotent2':
+        if model.NAME =='ider':
             accs = evaluateid(model, dataset)
         else:
             accs = evaluate(model, dataset)
         results.append(accs[0])
         results_mask_classes.append(accs[1])
-        if model.NAME =='idempotent2':
-            eces= evaluate_ece2(model, dataset)
+        if model.NAME =='ider':
+            eces= evaluate_eceid(model, dataset)
         else: 
             eces= evaluate_ece(model, dataset)
         
@@ -452,15 +346,14 @@ def train(model: ContinualModel, dataset: ContinualDataset,
         if not args.disable_log and not args.debug:
             logger.log(mean_acc)
             logger.log_fullacc(accs)
-
-    
+  
     if not args.disable_log and not args.ignore_other_metrics and not args.debug:
         logger.add_bwt(results, results_mask_classes)
         logger.add_forgetting(results, results_mask_classes)
-        if model.NAME != 'icarl' and model.NAME != 'pnn'and model.NAME != 'icarlid':
+        if model.NAME != 'icarl' and model.NAME != 'pnn':
             logger.add_fwt(results, random_results_class,
                            results_mask_classes, random_results_task)
-    # save_results_to_csv('results.csv', dataset.NAME, model.NAME, args.seed,args.weighta,args.weightb,results)
+
     if args.savecheckpoint:
         dataset_name = args.dataset if hasattr(args, 'dataset') and args.dataset else 'unknown_dataset'
         buffer_tag = f"buffer_{args.buffer_size}" if hasattr(args, 'buffer_size') and args.buffer_size is not None else "buffer_none"
@@ -472,17 +365,3 @@ def train(model: ContinualModel, dataset: ContinualDataset,
 
         torch.save(model.net.state_dict(), model_path)
         print(f"Model saved to: {model_path}")
-
-
-
-def save_results_to_csv(path, data_name, model_name, seed, weighta, weightb,results):
-
-    metrics=['mean_acc', 'forgetting']
-    with open(path, 'a', newline='', encoding='utf-8-sig') as csvfile:
-        writer = csv.writer(csvfile)
-
-        writer.writerow([data_name, model_name,seed,weighta,weightb])
-
-        writer.writerow(["Method"] + metrics)
-        values = ["{:.2f}".format(results[-1]) , "{:.2f}".format(forgetting(results))]
-        writer.writerow(['results'] + values)
