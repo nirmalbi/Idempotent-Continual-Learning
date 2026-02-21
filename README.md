@@ -6,13 +6,20 @@
 <a href="ARXIV_LINK"><img src="https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg" alt="arXiv"></a>
 <a href="PROJECT_PAGE_LINK"><img src="https://img.shields.io/badge/Project-Page-green.svg" alt="Project Page"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
+<a href="mailto:CONTACT_EMAIL"><img src="https://img.shields.io/badge/Contact-Email-lightgrey.svg" alt="Contact Email"></a>
 
 IDER is a novel framework for continual learning based on the idempotent property, which mitigates catastrophic forgetting and improves prediction reliability. It is a simple and robust method that can be easily integrated into other state-of-the-art approaches.
 
 <hr/>
 
 <p>
-Zhanwang Liu<sup>1</sup>, Yuting Li<sup>1</sup>, Haoyuan Gao<sup>1</sup>, Yexin Li<sup>4</sup>, Linghe Kong<sup>1</sup>, Lichao Sun<sup>3</sup>, Weiran Huang<sup>1,2,4</sup>
+Zhanwang Liu<sup>1</sup><sup>†</sup>,
+Yuting Li<sup>1</sup><sup>†</sup>,
+Haoyuan Gao<sup>1</sup>,
+Yexin Li<sup>4</sup>,
+Linghe Kong<sup>1</sup>,
+Lichao Sun<sup>3</sup>,
+Weiran Huang<sup>1,2,4</sup><sup>*</sup>
 </p>
 
 <p>
@@ -21,6 +28,13 @@ Zhanwang Liu<sup>1</sup>, Yuting Li<sup>1</sup>, Haoyuan Gao<sup>1</sup>, Yexin 
 <sup>3</sup> Lehigh University<br/>
 <sup>4</sup> State Key Laboratory of General Artificial Intelligence, BIGAI
 </p>
+
+<p>
+<sup>†</sup> Equal contribution.&nbsp;&nbsp;
+<sup>*</sup> Corresponding author.
+</p>
+
+
 </div>
 
 ## 🎉 News
