@@ -1,7 +1,7 @@
 
 <div align="center">
 
-# Idempotent Experience Replay for Reliable Continual Learning
+# IDER: Idempotent Experience Replay for Reliable Continual Learning
 
 [![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](ARXIV_LINK)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
@@ -13,13 +13,13 @@ IDER is a novel framework for continual learning based on the idempotent propert
 <hr/>
 
 <p>
-Zhanwang Liu<sup>1</sup><sup>†</sup>,
-Yuting Li<sup>1</sup><sup>†</sup>,
+Zhanwang Liu<sup>1</sup><sup>*</sup>,
+Yuting Li<sup>1</sup><sup>*</sup>,
 Haoyuan Gao<sup>1</sup>,
 Yexin Li<sup>4</sup>,
 Linghe Kong<sup>1</sup>,
 Lichao Sun<sup>3</sup>,
-Weiran Huang<sup>1,2,4</sup><sup>*</sup>
+Weiran Huang<sup>1,2,4</sup><sup>†</sup>
 </p>
 
 <p>
@@ -30,8 +30,8 @@ Weiran Huang<sup>1,2,4</sup><sup>*</sup>
 </p>
 
 <p>
-<sup>†</sup> Equal contribution.&nbsp;&nbsp;
-<sup>*</sup> Corresponding author.
+<sup>*</sup> Equal contribution.&nbsp;&nbsp;
+<sup>†</sup> Corresponding author.
 </p>
 
 <br/>
@@ -117,7 +117,6 @@ The results below were obtained using an Ascend 910B.
 | Tiny‑ImageNet | 4000 | ER+ID | 20.73&nbsp;±&nbsp;0.72 | 74.30&nbsp;±&nbsp;0.97 | 43.15&nbsp;±&nbsp;1.20 | [pth](https://github.com/YutingLi0606/Idempotent-Continual-Learning/tree/main/experiments/seq-tinyimg/buffer_4000/erid_seed_0.pth) |
 </details>
 
-Checkpoint
 
 The checkpoints are saved under experiments folder.
 
