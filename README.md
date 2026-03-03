@@ -3,7 +3,7 @@
 
 # IDER: Idempotent Experience Replay for Reliable Continual Learning
 
-[![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](ARXIV_LINK)
+[![arXiv](https://img.shields.io/badge/arXiv-2603.00624-b31b1b.svg)](ARXIV_LINK)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Contact Email](https://img.shields.io/badge/Contact-Email-lightgrey.svg)](mailto:zhanwnagliu@gmail.com)
 <!--<a href="PROJECT_PAGE_LINK"><img src="https://img.shields.io/badge/Project-Page-green.svg" alt="Project Page"></a>-->
@@ -142,13 +142,16 @@ And then go to http://127.0.0.1:5000/#/ in your brower to see all the results fr
 
 ## 4. Citation
 If our project is helpful for your research, please consider citing :
-```
 
-@article{Li2024sureood,
-    author    = {Li, Yang and Sha, Youyang and Wu, Shengliang and Li, Yuting and Yu, Xuanlong and Huang, Shihua and Cun, Xiaodong and Chen,Yingyi and Chen, Dexiong and Shen, Xi},
-    title     = {SURE-OOD: Detecting OOD samples with SURE},
-    month     = {September}
-    year      = {2024},
+```
+@misc{liu2026ideridempotentexperiencereplay,
+      title={IDER: IDempotent Experience Replay for Reliable Continual Learning}, 
+      author={Zhanwang Liu and Yuting Li and Haoyuan Gao and Yexin Li and Linghe Kong and Lichao Sun and Weiran Huang},
+      year={2026},
+      eprint={2603.00624},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2603.00624}, 
 }
 ```
 
