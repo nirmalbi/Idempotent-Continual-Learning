@@ -145,14 +145,11 @@ And then go to http://127.0.0.1:5000/#/ in your brower to see all the results fr
 If our project is helpful for your research, please consider citing :
 
 ```
-@misc{liu2026ideridempotentexperiencereplay,
-      title={IDER: IDempotent Experience Replay for Reliable Continual Learning}, 
-      author={Zhanwang Liu and Yuting Li and Haoyuan Gao and Yexin Li and Linghe Kong and Lichao Sun and Weiran Huang},
-      year={2026},
-      eprint={2603.00624},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2603.00624}, 
+@article{liu2026ider,
+  title={IDER: IDempotent Experience Replay for Reliable Continual Learning},
+  author={Zhanwang Liu and Yuting Li and Haoyuan Gao and Yexin Li and Linghe Kong and Lichao Sun and Weiran Huang},
+  journal={arXiv preprint arXiv：2603.00624},
+  year={2026}
 }
 ```
 
