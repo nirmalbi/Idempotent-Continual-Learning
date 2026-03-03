@@ -3,7 +3,7 @@
 
 # IDER: Idempotent Experience Replay for Reliable Continual Learning
 
-[![arXiv](https://img.shields.io/badge/arXiv-2603.00624-b31b1b.svg)](ARXIV_LINK)
+[![arXiv](https://img.shields.io/badge/arXiv-2603.00624-b31b1b.svg)](https://arxiv.org/abs/2603.00624)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Contact Email](https://img.shields.io/badge/Contact-Email-lightgrey.svg)](mailto:zhanwnagliu@gmail.com)
 <!--<a href="PROJECT_PAGE_LINK"><img src="https://img.shields.io/badge/Project-Page-green.svg" alt="Project Page"></a>-->
