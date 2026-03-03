@@ -14,7 +14,7 @@ IDER is a novel framework for continual learning based on the idempotent propert
 
 <p>
 Zhanwang Liu<sup>1</sup><sup>*</sup>,
-Yuting Li<sup>1</sup><sup>*</sup>,
+Yuting Li<sup>1</sup><sup>*‡</sup>,
 Haoyuan Gao<sup>1</sup>,
 Yexin Li<sup>4</sup>,
 Linghe Kong<sup>1</sup>,
@@ -32,6 +32,7 @@ Weiran Huang<sup>1,2</sup><sup>†</sup>
 <p>
 <sup>*</sup> Equal contribution.&nbsp;&nbsp;
 <sup>†</sup> Corresponding author.
+<sup>‡</sup> Project lead.
 </p>
 
 <br/>
