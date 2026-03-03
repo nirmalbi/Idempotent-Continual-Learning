@@ -31,7 +31,7 @@ Weiran Huang<sup>1,2</sup><sup>†</sup>
 
 <p>
 <sup>*</sup> Equal contribution.&nbsp;&nbsp;
-<sup>†</sup> Corresponding author.
+<sup>†</sup> Corresponding author.&nbsp;&nbsp;
 <sup>‡</sup> Project lead.
 </p>
 
