@@ -44,7 +44,6 @@ Instead of random replay, we prioritize buffer samples with the highest idempote
 | Method | CIL | ECE | Task-IL |
 |--------|-----|-----|---------|
 | ER (our run) | 21.49% | 64.04 | 75.15% |
-| IDER original (our run) | 25.02% | 27.47 | 70.77% |
 | **IDER + Ours (γ=0.5)** | 45.49% | 12.55 | 83.58% |
 | **IDER + Ours (γ=1.0)** | **45.67%** | **11.85** | **83.88%** |
 | Paper's IDER (5 seeds avg) | 44.82% | 13.65 | — |
