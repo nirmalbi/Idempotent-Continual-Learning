@@ -1,12 +1,9 @@
----
-
 # IDER: Idempotent Experience Replay — Improved Version
 
 This repository is a fork of [IDER (ICLR 2026)](https://github.com/YutingLi0606/Idempotent-Continual-Learning) with two improvements proposed as part of a course project.
 
 **Original Paper:** IDER: IDempotent Experience Replay for Reliable Continual Learning (ICLR 2026)
 
----
 
 ## Our Improvements
 
